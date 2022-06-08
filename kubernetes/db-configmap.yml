@@ -6,4 +6,4 @@ data:
   user: ecommerce-user
   database: asinpa_ecommerce
   server: asinpa_ecommerce_db
-  port: 5432
+  port: "5432"
