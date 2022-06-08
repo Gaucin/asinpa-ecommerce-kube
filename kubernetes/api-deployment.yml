@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ecommerce_api_deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: djangoapi
+  template:
+    metadata:
+      labels:
+        app: djangoapi
+    spec:
+      containers:
+      - name: ecommerce_api
+        image: ecommerce_api
+        imagePullPolicy: Never
+        resources:
+          limits:
+            memory: 1024Mi
+            cpu: 1000m
+          requests:
+            memory: 512Mi
+        ports:
+        - containerPort: 5000
+        envFrom:
+        - secretRef:
+          name: postgres-secret
+        - configMapRef:
+          name: api-config
+        - configMapRef:
+          name: postgres-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ecommerce_api_service
+spec:
+  ports:
+  - port: 5000
+    protocol: TCP
+    targetPort: 5000
+  selector:
+    app: djangoapi.
+  type: LoadBalancer

@@ -1,0 +1,28 @@
+version: "3.5"
+
+services:
+  db:
+    image: postgres:12.0-alpine
+    container_name: asinpa_db
+    env_file: '.db.env'
+    volumes:
+      - ./postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+  backend:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    container_name: asinpa_backend
+    env_file: 
+      - ".back.env"
+      - ".db.env"
+    ports:
+      - "9000:9000"
+    volumes:
+      - .:/app
+    depends_on:
+      - db
+
+volumes:
+  postgres_data:
